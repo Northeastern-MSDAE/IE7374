@@ -84,6 +84,9 @@ cd IE7374
 
 ```bash
 pip install -r requirements.txt
+
+# Download the spaCy language model
+python -m spacy download en_core_web_sm
 ```
 
 **Set up OpenAI credentials**
