@@ -76,8 +76,8 @@ math-tutor/
 **Clone the repo**
 
 ```bash
-git clone https://github.com/your-username/math-tutor.git
-cd math-tutor
+git clone [https://github.com/your-username/math-tutor.git](https://github.com/Northeastern-MSDAE/IE7374.git)
+cd IE7374
 ```
 
 **Install dependencies**
