@@ -1,6 +1,6 @@
 
 
-# QA Attention Analysis Pipeline
+# QA Attention Analysis Across Domains 
 
 This repository implements a complete pipeline to analyze and compare transformer attention patterns across two domains: Medical and Legal QA.
 
@@ -84,6 +84,13 @@ This repository implements a complete pipeline to analyze and compare transforme
 3. Commit your changes (`git commit -am 'Add ...'`)
 4. Push to the branch (`git push origin feature/...`)
 5. Open a Pull Request
+
+## **Contact & Support**
+
+For any issues or inquiries, please open an **Issue** on GitHub or reach out via:
+
+📧 **Email**: [IE7374@northeastern.edu](mailto:IE7374@northeastern.edu)
+🌐 **Website**: [QA Attention Analysis](https://github.com/Northeastern-MSDAE/IE7374)
 
 ## License
 
