@@ -1,173 +1,90 @@
 
 
+# QA Attention Analysis Pipeline
 
-# Generative Math Tutor: Curriculum-Aligned Word Problem Generator
+This repository implements a complete pipeline to analyze and compare transformer attention patterns across two domains: Medical and Legal QA.
 
-This project develops an AI-powered math tutor that generates curriculum-aligned word problems and provides step-by-step solutions using a chain-of-thought reasoning approach. It supports adaptive learning by dynamically tailoring problems to a student's grade level and difficulty preferences.
+## Project Structure
 
-## Project Goals
+- `notebooks/`
+  - `attention_analysis_domain_comparison.ipynb`: 
+    - Data loading, sampling, cleaning, and tokenization
+    - Zero-shot tagging and keyword extraction
+    - Computation of attention diagnostics
+    - PCA/t-SNE and distribution plots
+- `notebooks/utils`
+  - util functions
+- `requirements.txt`: Python dependencies
+- `README.md`: Project overview & setup instructions
 
-- Generate novel, curriculum-aligned math word problems (Grades 3–6)
-- Solve each problem using chain-of-thought (CoT) reasoning.
-- Tag problems with appropriate grade levels and math topics using NLP
-- Provide an interactive CLI/web interface for learners or educators.
-- Evaluate the correctness, clarity, and alignment of generated content.
+## Setup & Installation
 
----
+1. **Clone the repository**
 
-## Features
+   ```bash
+   git clone https://github.com/Northeastern-MSDAE/IE7500.git
+   cd IE7500
+   ```
 
-- **LLM-Powered Generation**: Uses GPT-3.5 for problem and solution generation with few-shot CoT prompts.
-- **Curriculum Tagging**: Uses `spaCy` + rule-based mapping to tag generated problems with Common Core grade levels and math concepts.
-- **Evaluation Framework**:
-  - Math correctness via `SymPy`
-  - Linguistic coherence (grammar checks)
-  - Curriculum alignment QA
-- **CLI/Web Interface**: Interactive tool for generating and viewing problems by grade and topic.
+2. **Create and activate a virtual environment**
 
----
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
 
-## Repository Structure
+3. **Install dependencies**
 
-```bash
-math-tutor/
-│
-├── data/
-│  ├── raw/            # Sample problems from MAWPS, ASDiv-A
-│  └── processed/      # Normalized and tagged data
-│
-├── prompts/
-│  └── prompt_templates.txt # Few-shot examples for GPT-3.5
-│
-├── src/
-│  ├── generator.py     # GPT-based problem + solution generator
-│  ├── tagger.py        # NLP + rule-based curriculum tagger
-│  ├── evaluator.py     # SymPy-based correctness evaluator
-│  ├── interface.py     # CLI or Streamlit app for users
-│  └── utils.py         # Shared utilities and helpers
-│
-├── tests/
-│  └── unit/               # Test cases for tagging and evaluation
-│
-├── notebooks/
-│  └── exploration.ipynb   # Early analysis and CoT testing
-│
-├── requirements.txt       # Python dependencies
-└── README.md
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-```
+## Pipeline Steps
 
----
+1. **Data Preparation**
+   - Load MedMCQA and Legal QA datasets
+   - Sample a balanced subset (configurable `N`)
+   - Clean text (remove HTML/markdown, Q/A prefixes)
+   - Tokenize and map subword tokens back to words
+2. **Tagging & Keyword Extraction**
+   - Zero-shot classification with HuggingFace pipeline
+   - Compute `auto_tags` for each question
+   - Extract domain-relevant keywords via TF-IDF or YAKE
+   - Compute salience metrics: `TagSalience` and `KeywordSalience`
+3. **Attention Metrics**
+   - Run T5 model to obtain decoder self-attention and cross-attention tensors
+   - Compute per-question diagnostics:
+     - **Entropy** of attention heads
+     - **Volatility** (max-min) across heads
+     - **Span** (fraction of non-zero attention)
+     - **Head Agreement** (Jensen–Shannon divergence)
+     - **SAAS** (Self vs. Auto Attention Score)
+4. **Statistical Analysis**
+   - Mann–Whitney U tests to compare distributions across domains
+   - Summarize means, std deviations, and p-values
+5. **Visualization**
+   - Histograms of each metric by domain
+   - PCA/t-SNE plots of flattened cross-attention vectors
+   - Heatmaps for example questions
 
-## Milestones
+## Results
 
-| Milestone                  | Description                         | Due Date |
-| -------------------------- | ----------------------------------- | -------- |
-| Group Formation & Proposal | Define idea, roles, scope           | May 26   |
-| Final Project Proposal     | Architecture + plan                 | Jun 30   |
-| Milestone 2                | Data pipeline: tagging, schema, NLP | Jul 14   |
-| Milestone 3                | Model generation + evaluation       | Jul 21   |
-| Final Submission           | Complete pipeline + report          | Aug 4    |
+- Summary statistics and significance tests are in `reports/`
+- Plots are saved in `figures/`
 
----
+## Configuration
 
-## Setup Instructions
+- Modify sampling size `N` in `data_prep.ipynb`
+- Choose device (CPU/GPU) via `--device` flag in scripts
 
-**Clone the repo**
+## Contributing
 
-```bash
-git clone https://github.com/your-username/math-tutor.git
-cd IE7374
-```
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/...`)
+3. Commit your changes (`git commit -am 'Add ...'`)
+4. Push to the branch (`git push origin feature/...`)
+5. Open a Pull Request
 
-**Install dependencies**
+## License
 
-```bash
-pip install -r requirements.txt
-
-# Download the spaCy language model
-python -m spacy download en_core_web_sm
-```
-
-**Set up OpenAI credentials**
-
-```bash
-export OPENAI_API_KEY=your_key_here
-```
-
-**Run the CLI tool**
-
-```bash
-python src/interface.py
-```
-
-------
-
-
-## ** Sample Workflow**
-
-```bash
-# Generate a problem for Grade 4
-python src/generator.py --grade 4 --topic "multiplication"
-
-# Tag the generated problem
-python src/tagger.py generated_output.json
-
-# Evaluate solution correctness
-python src/evaluator.py generated_output.json
-```
-
-------
-
-
-## **Team Roles**
-
-
-
-| **Name** | **Role**                                   |
-| -------- | ------------------------------------------ |
-| Member 1 | Curriculum Tagging (spaCy + rules), QA     |
-| Member 2 | Prompt Design, Chain-of-Thought Generation |
-| Member 3 | Evaluation (SymPy, Grammar, Tagging)       |
-| Member 4 | UI Development & Integration               |
-
-
-
-## **Datasets Used**
-
-
-- [MAWPS](https://huggingface.co/datasets/MU-NLPC/Calc-mawps)
-
-- [ASDiv-A](https://huggingface.co/datasets/MU-NLPC/Calc-asdiv_a)
-
-- [MathQA](https://huggingface.co/datasets/allenai/math_qa)
-
-  
-
-## **Tools & Libraries**
-
-- [OpenAI GPT-3.5](https://platform.openai.com/)
-- [spaCy](https://spacy.io/)
-- [SymPy](https://www.sympy.org/)
-- [Streamlit](https://streamlit.io/) or CLI for UI
-
-------
-
-## **Evaluation Metrics**
-
-- **Correctness** – Symbolic validation using SymPy
-- **Reasoning Clarity** – Chain-of-thought coherence
-- **Curriculum Alignment** – Tag accuracy vs. expected grade/topic
-- **Grammar/Clarity** – Language checks using heuristics or models
-
-
-
-## **License**
-
-This project is for educational use only under university course guidelines.
-
-
-
-## **Contact**
-
-If you have questions or suggestions, feel free to contact us via GitHub issues
+This project is licensed under the MIT License. See `LICENSE` for details.
