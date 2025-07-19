@@ -22,8 +22,8 @@ This repository implements a complete pipeline to analyze and compare transforme
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/Northeastern-MSDAE/IE7500.git
-   cd IE7500
+   git clone https://github.com/Northeastern-MSDAE/IE7374.git
+   cd IE7374
    ```
 
 2. **Create and activate a virtual environment**
